@@ -2,7 +2,7 @@
 name: klientenportal
 description: "Automate RZL Klientenportal.at — a web-based portal by RZL Software for exchanging receipts, invoices, and reports with your tax accountant. Login/logout, upload documents (Belegübergabe), list released files, and download Kanzleidokumente via Playwright."
 summary: "RZL Klientenportal automation: upload receipts, download reports."
-version: 1.3.0
+version: 1.3.1
 homepage: https://github.com/odrobnik/klientenportal-skill
 metadata:
   openclaw:
@@ -20,7 +20,7 @@ Automate [klientenportal.at](https://klientenportal.at) — a web portal by [RZL
 
 ## Setup
 
-See [SETUP.md](SETUP.md) for prerequisites, installation, and configuration.
+See [SETUP.md](SETUP.md) for prerequisites and setup instructions.
 
 ## Belegkreis Categories
 
