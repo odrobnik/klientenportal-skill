@@ -140,13 +140,31 @@ BELEGKREIS_MAP = {
 
 
 def _load_config() -> dict:
-    """Load config from workspace/klientenportal/config.json."""
-    if not CONFIG_FILE.exists():
-        print(f"ERROR: Config not found at {CONFIG_FILE}")
-        print(f"Run: python3 {Path(__file__).name} setup")
+    """Load config from config.json or env vars.
+
+    Env vars (override config.json values):
+        KLIENTENPORTAL_PORTAL_ID, KLIENTENPORTAL_USER_ID, KLIENTENPORTAL_PASSWORD
+    """
+    cfg: dict = {}
+    if CONFIG_FILE.exists():
+        cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+        _harden_path(CONFIG_FILE)
+
+    # Env vars override / supplement config.json
+    portal_id = os.environ.get("KLIENTENPORTAL_PORTAL_ID") or cfg.get("portal_id", "")
+    user_id = os.environ.get("KLIENTENPORTAL_USER_ID") or cfg.get("user_id", "")
+    password = os.environ.get("KLIENTENPORTAL_PASSWORD") or cfg.get("password", "")
+
+    if not portal_id or not user_id or not password:
+        missing = [n for n, v in [("portal_id", portal_id), ("user_id", user_id), ("password", password)] if not v]
+        print(f"ERROR: Missing config: {', '.join(missing)}")
+        print(f"Create {CONFIG_FILE} or set env vars. See SKILL.md for details.")
         sys.exit(1)
-    cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
-    _harden_path(CONFIG_FILE)
+
+    cfg["portal_id"] = portal_id
+    cfg["portal_url"] = cfg.get("portal_url") or f"https://klientenportal.at/prod/{portal_id}"
+    cfg["user_id"] = user_id
+    cfg["password"] = password
     return cfg
 
 
@@ -436,55 +454,6 @@ def cmd_logout(args):
     return 0
 
 
-def cmd_setup(args):
-    """Setup — creates config.json from args or env vars."""
-    print("[setup] HFP Klientenportal Setup")
-
-    portal_id = args.portal_id or os.environ.get("KLIENTENPORTAL_PORTAL_ID", "")
-    user_id = args.user_id or os.environ.get("KLIENTENPORTAL_USER_ID", "")
-    password = args.password or os.environ.get("KLIENTENPORTAL_PASSWORD", "")
-
-    if not portal_id or not user_id or not password:
-        missing = [name for name, val in [("portal ID", portal_id), ("user ID", user_id), ("password", password)] if not val]
-        print(f"[setup] ERROR: Missing {', '.join(missing)}")
-        print("[setup] Provide via flags or env vars:")
-        print("[setup]   --portal-id / KLIENTENPORTAL_PORTAL_ID  (e.g. 652)")
-        print("[setup]   --user-id   / KLIENTENPORTAL_USER_ID")
-        print("[setup]   --password  / KLIENTENPORTAL_PASSWORD")
-        return 1
-
-    _ensure_dir(CONFIG_DIR)
-
-    portal_url = f"https://klientenportal.at/prod/{portal_id}"
-
-    config = {
-        "portal_id": portal_id,
-        "portal_url": portal_url,
-        "user_id": user_id,
-        "password": password,
-    }
-
-    CONFIG_FILE.write_text(json.dumps(config, indent=2), encoding="utf-8")
-    _harden_path(CONFIG_FILE)
-    print(f"[setup] ✓ Config saved to {CONFIG_FILE}")
-
-    # Check playwright
-    print("[setup] Checking playwright...")
-    try:
-        from playwright.sync_api import sync_playwright as _sp  # noqa: F401
-
-        print("[setup] ✓ Playwright available")
-    except ImportError:
-        print("[setup] ERROR: Playwright not installed")
-        print("[setup] Run: pip install playwright && playwright install chromium")
-        return 1
-
-    print()
-    print("[setup] ✓ Setup complete!")
-    print(f"[setup] Test: python3 {Path(__file__).name} login")
-    return 0
-
-
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -496,7 +465,6 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s setup
   %(prog)s login
   %(prog)s upload -f invoice.pdf --belegkreis KA
   %(prog)s upload -f *.xml --belegkreis SP
@@ -509,13 +477,6 @@ Examples:
     parser.add_argument("--visible", action="store_true", help="Show browser")
 
     subparsers = parser.add_subparsers(dest="command", required=True)
-
-    # setup
-    setup_p = subparsers.add_parser("setup", help="Setup (creates config.json)")
-    setup_p.add_argument("--portal-id", help="Portal ID (e.g. 652)")
-    setup_p.add_argument("--user-id", help="Portal user ID")
-    setup_p.add_argument("--password", help="Portal password")
-    setup_p.set_defaults(func=cmd_setup)
 
     # login
     subparsers.add_parser("login", help="Test login").set_defaults(func=cmd_login)

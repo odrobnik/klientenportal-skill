@@ -2,7 +2,7 @@
 name: klientenportal
 description: "Automate RZL Klientenportal.at — a web-based portal by RZL Software for exchanging receipts, invoices, and reports with your tax accountant. Login/logout, upload documents (Belegübergabe), list released files, and download Kanzleidokumente via Playwright."
 summary: "RZL Klientenportal automation: upload receipts, download reports."
-version: 1.2.0
+version: 1.2.1
 homepage: https://github.com/odrobnik/klientenportal-skill
 metadata:
   openclaw:
@@ -28,17 +28,22 @@ playwright install chromium
 
 ## Configuration
 
-Run setup with your portal ID, user ID, and password:
+Create `{workspace}/klientenportal/config.json`:
 
-```bash
-python3 {baseDir}/scripts/klientenportal.py setup --portal-id 652 --user-id YOUR_USER_ID --password YOUR_PASSWORD
+```json
+{
+  "portal_id": "652",
+  "user_id": "YOUR_USER_ID",
+  "password": "YOUR_PASSWORD"
+}
 ```
 
-Or via env vars: `KLIENTENPORTAL_PORTAL_ID`, `KLIENTENPORTAL_USER_ID`, `KLIENTENPORTAL_PASSWORD`.
+The `portal_id` identifies your accountant's portal instance (e.g. `652` for HFP). The portal URL `https://klientenportal.at/prod/{portal_id}` is derived automatically.
 
-The portal ID identifies your accountant's portal instance (e.g. `652`). The URL `https://klientenportal.at/prod/{portal_id}` is derived automatically.
-
-Config is saved to `{workspace}/klientenportal/config.json` with restrictive file permissions.
+Alternatively, set env vars (these override config.json values):
+- `KLIENTENPORTAL_PORTAL_ID`
+- `KLIENTENPORTAL_USER_ID`
+- `KLIENTENPORTAL_PASSWORD`
 
 ## Belegkreis Categories
 

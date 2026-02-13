@@ -17,15 +17,20 @@ An [OpenClaw](https://openclaw.ai) skill for automating [klientenportal.at](http
 
 ## Setup
 
-```bash
-python3 scripts/klientenportal.py setup \
-  --portal-id 652 \
-  --user-id YOUR_USER_ID \
-  --password YOUR_PASSWORD
+Create `config.json` in your OpenClaw workspace under `klientenportal/`:
+
+```json
+{
+  "portal_id": "652",
+  "user_id": "YOUR_USER_ID",
+  "password": "YOUR_PASSWORD"
+}
 ```
 
-Or via environment variables:
-- `KLIENTENPORTAL_PORTAL_ID` — your accountant's portal instance ID
+The `portal_id` identifies your accountant's portal instance (e.g. `652`). The portal URL is derived automatically.
+
+Alternatively, set environment variables (override config.json):
+- `KLIENTENPORTAL_PORTAL_ID`
 - `KLIENTENPORTAL_USER_ID`
 - `KLIENTENPORTAL_PASSWORD`
 
