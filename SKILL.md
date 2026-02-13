@@ -20,7 +20,7 @@ Automate [klientenportal.at](https://klientenportal.at) — a web portal by [RZL
 
 ## Setup
 
-See [SETUP.md](SETUP.md) for prerequisites, installation, and configuration.
+See [SETUP.md](SETUP.md) for prerequisites and setup instructions.
 
 ## Belegkreis Categories
 
