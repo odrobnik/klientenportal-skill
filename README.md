@@ -62,6 +62,12 @@ python3 scripts/klientenportal.py logout
 | KA | Kassa | Credit card payments |
 | SP | Sparkasse | Bank account receipts |
 
+## Documentation
+
+- [SKILL.md](SKILL.md) — agent-facing reference (commands, behavior, limitations)
+- [SETUP.md](SETUP.md) — prerequisites, configuration, and setup instructions
+- [ClawHub](https://www.clawhub.com/skills/klientenportal) — install via ClawHub registry
+
 ## License
 
 MIT
