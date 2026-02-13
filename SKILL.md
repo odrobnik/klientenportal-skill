@@ -2,7 +2,7 @@
 name: klientenportal
 description: "Automate RZL Klientenportal.at — a web-based portal by RZL Software for exchanging receipts, invoices, and reports with your tax accountant. Login/logout, upload documents (Belegübergabe), list released files, and download Kanzleidokumente via Playwright."
 summary: "RZL Klientenportal automation: upload receipts, download reports."
-version: 1.4.3
+version: 1.4.4
 homepage: https://github.com/odrobnik/klientenportal-skill
 metadata:
   openclaw:
@@ -10,10 +10,7 @@ metadata:
     requires:
       bins: ["python3", "playwright"]
       python: ["playwright"]
-    env:
-      KLIENTENPORTAL_PORTAL_ID: "Portal numeric ID (e.g. 652)"
-      KLIENTENPORTAL_USER_ID: "Login username"
-      KLIENTENPORTAL_PASSWORD: "Login password"
+      env: ["KLIENTENPORTAL_PORTAL_ID", "KLIENTENPORTAL_USER_ID", "KLIENTENPORTAL_PASSWORD"]
 ---
 
 # RZL Klientenportal
