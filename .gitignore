@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.log
+.venv/
+venv/
+# Local secrets/config
+tokens-*.json
+secrets/
